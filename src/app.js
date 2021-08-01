@@ -57,7 +57,7 @@ app.post("/webhook", async (req, res) => {
 
         await bolt.client.files.upload({
           channels: process.env.SLACK_CHANNEL,
-          initial_comment: `Build Success.\nplatform:${platform}\nuser: ${metadata?.username}`,
+          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${metadata?.username}`,
           file: qrStream,
           title: "expo",
         });
@@ -65,7 +65,7 @@ app.post("/webhook", async (req, res) => {
       }
       case "errored": {
         await bolt.client.chat.postMessage({
-          text: `Build Failure.\nplatform:${platform}\nuser: ${metadata?.username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
+          text: `:rain_cloud: Build Failure.\nplatform: ${platform}\nuser: ${metadata?.username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
           channel: process.env.SLACK_CHANNEL,
         });
         break;
