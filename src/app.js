@@ -57,7 +57,7 @@ app.post("/webhook", async (req, res) => {
 
         await bolt.client.files.upload({
           channels: process.env.SLACK_CHANNEL,
-          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${metadata?.username}`,
+          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${metadata?.username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
           file: qrStream,
           title: "expo",
         });
