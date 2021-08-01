@@ -6,7 +6,8 @@ Using [Serverless Framework](https://www.serverless.com/).
 
 1. Slack Bot Setup
     1. [Create slack app](https://slack.dev/bolt-js/tutorial/getting-started)  
-    needs a [`chat:write`](https://api.slack.com/scopes/chat:write) and [`files:write`](files:write)
+    needs a [`chat:write`](https://api.slack.com/scopes/chat:write) and [`files:write`](files:write)  
+       <img alt="slack scopes" src="./.gh-assets/slack-oauth-scopes.png">
     1. Invite app to channel
     1. Rewrite `REPLACE_ME` in the [serverless.yml](./serverless.yml) file
     1. Deploy to AWS  
