@@ -31,6 +31,16 @@ app.post("/webhook", async (req, res) => {
     const { id, appId, status, artifacts, metadata, platform } = JSON.parse(
       req.body
     );
+    let username = metadata?.username;
+    if (process.env.EXPO_SLACK_ACCOUNT) {
+      for (const account of process.env.EXPO_SLACK_ACCOUNT.split(',')) {
+        const [expo, slack] = account.split(':');
+        if (expo === username) {
+          username = `<@${slack}>`;
+          break;
+        }
+      }
+    }
     switch (status) {
       case "finished": {
         const qrStream = new PassThrough();
@@ -57,7 +67,7 @@ app.post("/webhook", async (req, res) => {
 
         await bolt.client.files.upload({
           channels: process.env.SLACK_CHANNEL,
-          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${metadata?.username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
+          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
           file: qrStream,
           title: "expo",
         });
@@ -65,7 +75,15 @@ app.post("/webhook", async (req, res) => {
       }
       case "errored": {
         await bolt.client.chat.postMessage({
-          text: `:rain_cloud: Build Failure.\nplatform: ${platform}\nuser: ${metadata?.username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
+          blocks: [
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": `:rain_cloud: Build Failure.\n*platform*: ${platform}\n*user*: ${username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`
+              }
+            }
+          ],
           channel: process.env.SLACK_CHANNEL,
         });
         break;
