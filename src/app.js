@@ -67,7 +67,7 @@ app.post("/webhook", async (req, res) => {
 
         await bolt.client.files.upload({
           channels: process.env.SLACK_CHANNEL,
-          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`,
+          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name || process.env.EXPO_DEFAULT_TEAM_NAME}/projects/${metadata?.appName}/builds/${id}`,
           file: qrStream,
           title: "expo",
         });
@@ -80,7 +80,7 @@ app.post("/webhook", async (req, res) => {
               "type": "section",
               "text": {
                 "type": "mrkdwn",
-                "text": `:rain_cloud: Build Failure.\n*platform*: ${platform}\n*user*: ${username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name}/projects/${metadata?.appName}/builds/${id}`
+                "text": `:rain_cloud: Build Failure.\n*platform*: ${platform}\n*user*: ${username}\nhttps://expo.io/accounts/${metadata?.trackingContext?.account_name || process.env.EXPO_DEFAULT_TEAM_NAME}/projects/${metadata?.appName}/builds/${id}`
               }
             }
           ],

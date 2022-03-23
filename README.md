@@ -30,4 +30,5 @@ Using [Serverless Framework](https://www.serverless.com/).
 | SLACK_CLIENT_ID | false | Client id |  |
 | SLACK_SIGNING_SECRET | false | signing secret |  |
 | SLACK_CLIENT_SECRET | false |  |  |
+| EXPO_DEFAULT_TEAM_NAME | false | For team accounts, it will be `undefined` , so you can set a default value | `yourteam` |
 | EXPO_SLACK_ACCOUNT | false | Used for mentioning in Slack.  Format: `expo_account1:slack_account1,expo_account2:slack_account2` | `ryo-rm:U01MG0XXXXX` |
