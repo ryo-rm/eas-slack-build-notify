@@ -2,6 +2,7 @@ service: eas-build-notify
 
 provider:
   name: aws
+  architecture: arm64
   runtime: nodejs14.x
   region: ap-northeast-1
 
