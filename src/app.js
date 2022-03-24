@@ -28,20 +28,22 @@ app.post("/webhook", async (req, res) => {
   if (!safeCompare(expoSignature, hash)) {
     res.status(500).send("Signatures didn't match!");
   } else {
-    const { id, appId, status, artifacts, metadata, platform } = JSON.parse(
-      req.body
-    );
+    const { id, appId, status, artifacts, metadata, platform, error } =
+      JSON.parse(req.body);
     let username = metadata?.username;
     if (process.env.EXPO_SLACK_ACCOUNT) {
-      for (const account of process.env.EXPO_SLACK_ACCOUNT.split(',')) {
-        const [expo, slack] = account.split(':');
+      for (const account of process.env.EXPO_SLACK_ACCOUNT.split(",")) {
+        const [expo, slack] = account.split(":");
         if (expo === username) {
           username = `<@${slack}>`;
           break;
         }
       }
     }
-    const buildUrl = `https://expo.io/accounts/${metadata?.trackingContext?.account_name || process.env.EXPO_DEFAULT_TEAM_NAME}/projects/${metadata?.appName}/builds/${id}`;
+    const buildUrl = `https://expo.io/accounts/${
+      metadata?.trackingContext?.account_name ||
+      process.env.EXPO_DEFAULT_TEAM_NAME
+    }/projects/${metadata?.appName}/builds/${id}`;
     switch (status) {
       case "finished": {
         const qrStream = new PassThrough();
@@ -68,7 +70,7 @@ app.post("/webhook", async (req, res) => {
 
         await bolt.client.files.upload({
           channels: process.env.SLACK_CHANNEL,
-          initial_comment: `:sunny: Build Success.\nplatform: ${platform}\nuser: ${username}\n${buildUrl}`,
+          initial_comment: `:sunny: Build Success.\nPlatform: ${platform}\nUser: ${username}\n${buildUrl}`,
           file: qrStream,
           title: "expo",
         });
@@ -78,12 +80,45 @@ app.post("/webhook", async (req, res) => {
         await bolt.client.chat.postMessage({
           blocks: [
             {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": `:rain_cloud: Build Failure.\n*platform*: ${platform}\n*user*: ${username}\n${buildUrl}`,
-              }
-            }
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text: ":rain_cloud: Build Failure.",
+              },
+            },
+            {
+              type: "section",
+              fields: [
+                {
+                  type: "mrkdwn",
+                  text: `*Platform*\n${platform}`,
+                },
+                {
+                  type: "mrkdwn",
+                  text: `*User*\n${username}`,
+                },
+              ],
+            },
+            {
+              type: "section",
+              fields: [
+                {
+                  type: "mrkdwn",
+                  text: `*Error Code*\n${error?.errorCode}`,
+                },
+                {
+                  type: "mrkdwn",
+                  text: `*Error Message*\n${error?.message}`,
+                },
+              ],
+            },
+            {
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text: `*Detail*\n${buildUrl}`,
+              },
+            },
           ],
           channel: process.env.SLACK_CHANNEL,
         });
