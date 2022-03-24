@@ -2,6 +2,15 @@
 A serverless lambda to notify the result of EAS build.  
 Using [Serverless Framework](https://www.serverless.com/).
 
+<details>
+    <summary>Screen Shot</summary>
+        - Build Success.  
+        <img src="https://user-images.githubusercontent.com/6457344/159825136-25ac895e-952c-4753-b46e-3771b20d7f58.jpg" alt="success" />
+        - Build Failed.  
+        <img src="https://user-images.githubusercontent.com/6457344/159825225-249868e4-3145-4a43-b6af-fc8c765324c3.jpg" alt="failed" />
+
+</details>
+
 ## Installation
 
 1. Slack Bot Setup
