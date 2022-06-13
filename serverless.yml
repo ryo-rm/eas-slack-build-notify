@@ -1,26 +1,29 @@
-service: eas-build-notify
+org: teatalktechnologies
+console: true
+service: webhooks
 
 provider:
   name: aws
   architecture: arm64
   runtime: nodejs14.x
-  region: ap-northeast-1
+  region: us-east-1
+  profile: monty-root
 
 package:
   exclude:
     - .git/**
-    - .gh-assets/**
     - README.md
 functions:
   eas-build-webhook:
     handler: lambda.handler
     events:
       - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http: ANY /{proxy+}
     environment:
-      EAS_SECRET_WEBHOOK_KEY: "REPLACE_ME"
-      SLACK_CLIENT_ID: "REPLACE_ME"
-      SLACK_CLIENT_SECRET: "REPLACE_ME"
-      SLACK_TOKEN: "REPLACE_ME"
-      SLACK_SIGNING_SECRET: "REPLACE_ME"
-      SLACK_CHANNEL: "REPLACE_ME"
+      EAS_WEBHOOK_SECRET: '4006a02d-0e30-478d-87e8-65a2bda4f8c5'
+      SLACK_CLIENT_ID: 'A03GDSKS31Q'
+      SLACK_CLIENT_SECRET: '5c6aff4866d333e50af3407650199292'
+      SLACK_TOKEN: 'xoxb-3144361193890-3551279495766-E8k5rHxbVLmZMOgaiJ7PQh0G'
+      SLACK_SIGNING_SECRET: '3c4113acb261af3f349e6796d827aa27'
+      EAS_BUILD_CHANNEL: 'eas-build-updates'
+      EAS_SUBMIT_CHANNEL: 'eas-submit-updates'
